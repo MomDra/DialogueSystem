@@ -20,6 +20,6 @@ public class InteractionEvent : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         GetDialogue();
-        UIManager.Instance.EnableDialougeWindow(dialogue.dialogues);
+        UIController.Instance.EnableDialougeWindow(dialogue.dialogues);
     }
 }
