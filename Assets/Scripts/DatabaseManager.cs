@@ -19,12 +19,9 @@ public class DatabaseManager : MonoBehaviour
     {
         if (instance == null)
         {
-            int questNum;
             instance = this;
             DialogueParser theParser = GetComponent<DialogueParser>();
-            Dialogue[] dialogues = theParser.Parse(csv_FileName, out questNum);
-
-            dialougeDic.Add(questNum, dialogues);
+            QuestSystem.Quest abc = theParser.ParseQuest(csv_FileName);
 
             isFinish = true;
         }
