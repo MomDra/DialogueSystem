@@ -1425,8 +1425,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1685990308}
   - component: {fileID: 1685990307}
-  - component: {fileID: 1685990309}
   - component: {fileID: 1685990310}
+  - component: {fileID: 1685990311}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -1461,19 +1461,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1685990309
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1685990306}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 087effc238048e2458072d4a8674f19f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  csv_FileName: DialogueDB
 --- !u!114 &1685990310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1487,6 +1474,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueWindow: {fileID: 1017596495}
+--- !u!114 &1685990311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1685990306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c37636bd86042c45a15db6a92479493, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  csv_FileName: Quest
 --- !u!1 &1729151255
 GameObject:
   m_ObjectHideFlags: 0

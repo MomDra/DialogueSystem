@@ -11,10 +11,9 @@ public class InteractionEvent : MonoBehaviour, IPointerClickHandler
     [SerializeField]
     int questNum;
 
-    public Dialogue[] GetDialogue()
+    public void GetDialogue()
     {
-        dialogue.dialogues = DatabaseManager.instance.GetDialogue(questNum);
-        return dialogue.dialogues;
+
     }
 
     public void OnPointerClick(PointerEventData eventData)

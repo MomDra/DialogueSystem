@@ -4,32 +4,42 @@ using UnityEngine;
 
 public class DialogueParser : MonoBehaviour
 {
-    public QuestSystem.Quest ParseQuest(string _cSVFileName)
+    public void ParseQuest(string _cSVFileName)
     {
         TextAsset csvData = Resources.Load<TextAsset>(_cSVFileName);
         string[] data = csvData.text.Split('\n');
 
-        int no = int.Parse(data[0].Split(',')[1]);
-        string npc_name = data[1].Split(',')[1];
-        string mission = data[2].Split(',')[1]; ;
-        string reward = data[3].Split(',')[1]; ;
-        string description = data[4].Split(',')[1];
+        int numofQuest = data.Length / 6;
 
-        Dialogue[] beforeDialogues;
-        Dialogue[] currDialogues;
-        Dialogue[] afterDialogues;
+        for (int i = 0; i < numofQuest; ++i)
+        {
+            int no = int.Parse(data[i * 6 + 0].Split(',')[1]);
+            string npc_name = data[i * 6 + 1].Split(',')[1];
+            string mission = data[i * 6 + 2].Split(',')[1]; ;
+            string reward = data[i * 6 + 3].Split(',')[1]; ;
+            string description = data[i * 6 + 4].Split(',')[1];
 
-        string dialogueCsvFileName = data[5].Split(',')[1];
-        ParseDialogue(dialogueCsvFileName, out beforeDialogues, out currDialogues, out afterDialogues);
+            Dialogue[] beforeDialogues;
+            Dialogue[] currDialogues;
+            Dialogue[] afterDialogues;
 
-        return new QuestSystem.Quest(no, npc_name, mission, reward, description, beforeDialogues, currDialogues, afterDialogues);
+            string dialogueCsvFileName = data[i * 6 + 5].Split(',')[1];
+            ParseDialogue(dialogueCsvFileName, out beforeDialogues, out currDialogues, out afterDialogues);
+            QuestSystem.Quest quest = new QuestSystem.Quest(no, npc_name, mission, reward, description, beforeDialogues, currDialogues, afterDialogues);
+            QuestSystem.instance.AddQuest(quest);
+
+            quest.PrintDebug();
+        }
     }
 
-    public void ParseDialogue(string _cSVFileName, out Dialogue[] beforeDialogues, out Dialogue[] currDialogues, out Dialogue[] afterDialogues)
+    private void ParseDialogue(string _cSVFileName, out Dialogue[] beforeDialogues, out Dialogue[] currDialogues, out Dialogue[] afterDialogues)
     {
         List<Dialogue> beforeDialogueList = new List<Dialogue>();
         List<Dialogue> currDialogueList = new List<Dialogue>();
         List<Dialogue> afterDialogueList = new List<Dialogue>();
+
+        _cSVFileName = _cSVFileName.Trim();
+
         TextAsset csvData = Resources.Load<TextAsset>(_cSVFileName);
 
         string[] data = csvData.text.Split('\n');
@@ -99,30 +109,6 @@ public class DialogueParser : MonoBehaviour
             dialogue.contexts = dialogueText.ToArray();
             afterDialogueList.Add(dialogue);
         }
-
-        // for (int i = 4; i < data.Length;)
-        // {
-        //     string[] row = data[i].Split(',');
-        //     Dialogue dialogue = new Dialogue();
-        //     dialogue.name = row[0];
-        //     List<string> dialougeTexts = new List<string>();
-
-        //     Debug.Log(dialogue.name);
-
-        //     do
-        //     {
-        //         dialougeTexts.Add(row[1]);
-        //         Debug.Log(row[1]);
-
-        //         ++i;
-        //         if (i >= data.Length) break;
-
-        //         row = data[i].Split(',');
-        //     } while (row[0] == dialogue.name);
-
-        //     dialogue.contexts = dialougeTexts.ToArray();
-        //     dialogueList.Add(dialogue);
-        // }
 
         beforeDialogues = beforeDialogueList.ToArray();
         currDialogues = currDialogueList.ToArray();

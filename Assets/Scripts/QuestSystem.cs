@@ -5,9 +5,16 @@ using UnityEngine;
 public class QuestSystem : MonoBehaviour
 {
     public static QuestSystem instance;
+    [SerializeField]
+    string csv_FileName;
 
 
     // 여기가 모델이라고 해보자
+
+    public enum QuestState
+    {
+        BEFORE, CURR, AFTER
+    }
 
     public class Quest
     {
@@ -19,6 +26,7 @@ public class QuestSystem : MonoBehaviour
         Dialogue[] beforeDialogues;
         Dialogue[] currDialogues;
         Dialogue[] afterDialogues;
+        QuestState state;
 
         public int No { get => no; }
         public string Npc_name { get => npc_name; }
@@ -37,6 +45,8 @@ public class QuestSystem : MonoBehaviour
             this.beforeDialogues = beforeDialogues;
             this.currDialogues = currDialogues;
             this.afterDialogues = afterDialogues;
+
+            state = QuestState.BEFORE;
         }
 
         public void PrintDebug()
@@ -84,6 +94,14 @@ public class QuestSystem : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+
+            DialogueParser theParser = GetComponent<DialogueParser>();
+            theParser.ParseQuest(csv_FileName);
+            // TextAsset data = Resources.Load<TextAsset>("DialogueDB1");
+            // if (data == null)
+            // {
+            //     Debug.Log("dsafjkdsa");
+            // }
         }
         else
         {
@@ -104,6 +122,6 @@ public class QuestSystem : MonoBehaviour
 
     public void AddQuest(Quest quest)
     {
-
+        beforeQuestDic.Add(quest.No, quest);
     }
 }
