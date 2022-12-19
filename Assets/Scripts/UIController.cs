@@ -14,15 +14,8 @@ public class UIController : MonoBehaviour
     [SerializeField]
     GameObject dialogueWindow;
 
-    TextMeshProUGUI text;
-    Button nextButton;
-    Button closeButton;
-
-
-    Dialogue[] currDialogue;
-    int dialogueIndex;
-    int contextIndex;
-
+    [SerializeField]
+    DialogueView view;
 
     private void Awake()
     {
@@ -33,55 +26,35 @@ public class UIController : MonoBehaviour
         }
 
         instance = this;
-        text = dialogueWindow.GetComponentInChildren<TextMeshProUGUI>();
-        nextButton = dialogueWindow.GetComponentsInChildren<Button>()[0];
-        closeButton = dialogueWindow.GetComponentsInChildren<Button>()[1];
-        nextButton.onClick.AddListener(Next);
-        closeButton.onClick.AddListener(Close);
-
-        EnableNextButton();
     }
 
-    public void EnableDialougeWindow(Dialogue[] dialogues)
+    public void EnableQuestWindow(int[] questNumbers)
     {
-        currDialogue = dialogues;
+        view.EnableQuestWindow();
 
-        dialogueIndex = 0;
-        contextIndex = 0;
-        text.text = $"{currDialogue[0].name}: {currDialogue[0].contexts[0]}";
-        dialogueWindow.SetActive(true);
-        EnableNextButton();
-    }
-
-    private void Next()
-    {
-        if (++contextIndex >= currDialogue[dialogueIndex].contexts.Length)
+        foreach (int var in questNumbers)
         {
-            contextIndex = 0;
-
-            if (++dialogueIndex + 1 >= currDialogue.Length)
-            {
-                EnableCloseButton();
-            }
+            view.AddQuest(QuestSystem.instance.GetQuest(var).Mission, var);
         }
-
-        text.text = $"{currDialogue[dialogueIndex].name}: {currDialogue[dialogueIndex].contexts[contextIndex]}";
     }
 
-    private void EnableCloseButton()
+    public void EnableDialogueWindow(int questNum)
     {
-        nextButton.gameObject.SetActive(false);
-        closeButton.gameObject.SetActive(true);
-    }
+        view.EnableDialougeWindow();
 
-    private void EnableNextButton()
-    {
-        nextButton.gameObject.SetActive(true);
-        closeButton.gameObject.SetActive(false);
-    }
+        QuestSystem.Quest quest = QuestSystem.instance.GetQuest(questNum);
 
-    private void Close()
-    {
-        dialogueWindow.SetActive(false);
+        switch (quest.State)
+        {
+            case QuestSystem.QuestState.BEFORE:
+                view.SetDialogues(quest.BeforeDialogues);
+                break;
+            case QuestSystem.QuestState.CURR:
+                view.SetDialogues(quest.CurrDialogues);
+                break;
+            case QuestSystem.QuestState.AFTER:
+                view.SetDialogues(quest.AfterDialogues);
+                break;
+        }
     }
 }

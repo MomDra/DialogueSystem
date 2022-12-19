@@ -33,7 +33,10 @@ public class QuestSystem : MonoBehaviour
         public string Mission { get => mission; }
         public string Reward { get => reward; }
         public string Description { get => description; }
-        public Dialogue[] Dialogues { get => beforeDialogues; }
+        public Dialogue[] BeforeDialogues { get => beforeDialogues; }
+        public Dialogue[] CurrDialogues { get => currDialogues; }
+        public Dialogue[] AfterDialogues { get => afterDialogues; }
+        public QuestState State { get => state; }
 
         public Quest(int no, string npc_name, string mission, string reward, string description, Dialogue[] beforeDialogues, Dialogue[] currDialogues, Dialogue[] afterDialogues)
         {
@@ -109,19 +112,13 @@ public class QuestSystem : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-
-    }
-
-
     public void AddQuest(Quest quest)
     {
         beforeQuestDic.Add(quest.No, quest);
+    }
+
+    public Quest GetQuest(int questNum)
+    {
+        return beforeQuestDic[questNum];
     }
 }

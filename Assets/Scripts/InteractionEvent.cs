@@ -5,20 +5,11 @@ using UnityEngine.EventSystems;
 
 public class InteractionEvent : MonoBehaviour, IPointerClickHandler
 {
-
     [SerializeField]
-    DialogueEvent dialogue;
-    [SerializeField]
-    int questNum;
-
-    public void GetDialogue()
-    {
-
-    }
+    int[] questNumbers;
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        GetDialogue();
-        UIController.Instance.EnableDialougeWindow(dialogue.dialogues);
+        UIController.Instance.EnableQuestWindow(questNumbers);
     }
 }
