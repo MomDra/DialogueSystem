@@ -22,6 +22,9 @@ public class DialogueView : MonoBehaviour
 
     List<GameObject> addedGameObject;
 
+    int currQuestNum;
+    bool currQuestIsBefore;
+
     private void Awake()
     {
         addedGameObject = new List<GameObject>();
@@ -42,16 +45,25 @@ public class DialogueView : MonoBehaviour
         dialogueWindow.SetActive(true);
     }
 
-    public void EnableCloseButton()
+    public void EnableAcceptCloseButton()
     {
         dialogueWindowButtons[0].gameObject.SetActive(false);
         dialogueWindowButtons[1].gameObject.SetActive(true);
+        dialogueWindowButtons[2].gameObject.SetActive(true);
+    }
+
+    public void EnableCloseButtonOnly()
+    {
+        dialogueWindowButtons[0].gameObject.SetActive(false);
+        dialogueWindowButtons[1].gameObject.SetActive(true);
+        dialogueWindowButtons[2].gameObject.SetActive(false);
     }
 
     public void EnableNextButton()
     {
         dialogueWindowButtons[0].gameObject.SetActive(true);
         dialogueWindowButtons[1].gameObject.SetActive(false);
+        dialogueWindowButtons[2].gameObject.SetActive(false);
     }
 
     public void AddQuest(string questText, int questNum)
@@ -73,13 +85,20 @@ public class DialogueView : MonoBehaviour
 
         if (dialogues.Length <= 1 && dialogues[0].contexts.Length <= 1)
         {
-            EnableCloseButton();
+            if (currQuestIsBefore)
+            {
+                EnableAcceptCloseButton();
+            }
+            else
+            {
+                EnableCloseButtonOnly();
+            }
+
         }
         else
         {
             EnableNextButton();
         }
-
     }
 
     public void CloseQuestWindow()
@@ -90,7 +109,6 @@ public class DialogueView : MonoBehaviour
 
     public void CloseDialogueWindow()
     {
-
         dialogueWindow.SetActive(false);
     }
 
@@ -104,15 +122,23 @@ public class DialogueView : MonoBehaviour
 
         if (dialoguesIndex == currDialogues.Length - 1 && contextIndex == currDialogues[dialoguesIndex].contexts.Length - 1)
         {
-            EnableCloseButton();
+            if (currQuestIsBefore)
+            {
+                EnableAcceptCloseButton();
+            }
+            else
+            {
+                EnableCloseButtonOnly();
+            }
         }
 
         dialogueWindow.GetComponentInChildren<TextMeshProUGUI>().text = $"{currDialogues[dialoguesIndex].name}: {currDialogues[dialoguesIndex].contexts[contextIndex]}";
     }
 
-    public void Close()
+    public void Accept()
     {
-        dialogueWindow.SetActive(false);
+        UIController.Instance.AcceptQuest(currQuestNum);
+        CloseDialogueWindow();
     }
 
     private void QuestClear()
@@ -129,5 +155,11 @@ public class DialogueView : MonoBehaviour
     {
         QuestClear();
         UIController.Instance.EnableDialogueWindow(questNum);
+    }
+
+    public void SetCurrQuestState(int questNum, bool isBefore)
+    {
+        currQuestNum = questNum;
+        currQuestIsBefore = isBefore;
     }
 }

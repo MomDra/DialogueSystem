@@ -36,7 +36,7 @@ public class QuestSystem : MonoBehaviour
         public Dialogue[] BeforeDialogues { get => beforeDialogues; }
         public Dialogue[] CurrDialogues { get => currDialogues; }
         public Dialogue[] AfterDialogues { get => afterDialogues; }
-        public QuestState State { get => state; }
+        public QuestState State { get => state; set => state = value; }
 
         public Quest(int no, string npc_name, string mission, string reward, string description, Dialogue[] beforeDialogues, Dialogue[] currDialogues, Dialogue[] afterDialogues)
         {
@@ -88,9 +88,8 @@ public class QuestSystem : MonoBehaviour
         }
     }
 
-    Dictionary<int, Quest> currQuestDic = new Dictionary<int, Quest>();
-    Dictionary<int, Quest> beforeQuestDic = new Dictionary<int, Quest>();
-    Dictionary<int, Quest> afterQuestDic = new Dictionary<int, Quest>();
+    Dictionary<int, Quest> QuestDic = new Dictionary<int, Quest>();
+    List<int> acceptedQuestList = new List<int>();
 
     private void Awake()
     {
@@ -114,11 +113,27 @@ public class QuestSystem : MonoBehaviour
 
     public void AddQuest(Quest quest)
     {
-        beforeQuestDic.Add(quest.No, quest);
+        QuestDic.Add(quest.No, quest);
     }
 
     public Quest GetQuest(int questNum)
     {
-        return beforeQuestDic[questNum];
+        return QuestDic[questNum];
+    }
+
+    public void QuestAccept(int questNum)
+    {
+        QuestDic[questNum].State = QuestState.CURR;
+        acceptedQuestList.Add(questNum);
+    }
+
+    public void QuestComplete(int questNum)
+    {
+        QuestDic[questNum].State = QuestState.AFTER;
+    }
+
+    public int[] GetAcceptedQuest()
+    {
+        return acceptedQuestList.ToArray();
     }
 }

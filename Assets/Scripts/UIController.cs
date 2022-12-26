@@ -15,7 +15,10 @@ public class UIController : MonoBehaviour
     GameObject dialogueWindow;
 
     [SerializeField]
-    DialogueView view;
+    DialogueView dialogueView;
+
+    [SerializeField]
+    QuestInfoView questInfoView;
 
     private void Awake()
     {
@@ -28,33 +31,59 @@ public class UIController : MonoBehaviour
         instance = this;
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            TogleQuestInfoWindow();
+        }
+    }
+
     public void EnableQuestWindow(int[] questNumbers)
     {
-        view.EnableQuestWindow();
+        dialogueView.EnableQuestWindow();
 
         foreach (int var in questNumbers)
         {
-            view.AddQuest(QuestSystem.instance.GetQuest(var).Mission, var);
+            dialogueView.AddQuest(QuestSystem.instance.GetQuest(var).Mission, var);
         }
     }
 
     public void EnableDialogueWindow(int questNum)
     {
-        view.EnableDialougeWindow();
+        dialogueView.EnableDialougeWindow();
 
         QuestSystem.Quest quest = QuestSystem.instance.GetQuest(questNum);
 
         switch (quest.State)
         {
             case QuestSystem.QuestState.BEFORE:
-                view.SetDialogues(quest.BeforeDialogues);
+                dialogueView.SetCurrQuestState(questNum, true);
+                dialogueView.SetDialogues(quest.BeforeDialogues);
                 break;
             case QuestSystem.QuestState.CURR:
-                view.SetDialogues(quest.CurrDialogues);
+                dialogueView.SetCurrQuestState(questNum, false);
+                dialogueView.SetDialogues(quest.CurrDialogues);
                 break;
             case QuestSystem.QuestState.AFTER:
-                view.SetDialogues(quest.AfterDialogues);
+                dialogueView.SetCurrQuestState(questNum, false);
+                dialogueView.SetDialogues(quest.AfterDialogues);
                 break;
         }
+    }
+
+    public void AcceptQuest(int questNum)
+    {
+        QuestSystem.instance.QuestAccept(questNum);
+    }
+
+
+
+
+    // QuestInfoWindow 관련은 여기 밑에
+
+    public void TogleQuestInfoWindow()
+    {
+        questInfoView.TogleQuestInfoWindow();
     }
 }
