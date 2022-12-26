@@ -84,6 +84,25 @@ public class UIController : MonoBehaviour
 
     public void TogleQuestInfoWindow()
     {
-        questInfoView.TogleQuestInfoWindow();
+        bool isActive = questInfoView.TogleQuestInfoWindow();
+
+        if (isActive)
+        {
+            int[] arr = QuestSystem.instance.GetAcceptedQuest();
+            string[] arr2 = new string[arr.Length];
+
+            for (int i = 0; i < arr.Length; ++i)
+            {
+                arr2[i] = QuestSystem.instance.GetQuest(arr[i]).Mission;
+            }
+
+            questInfoView.Init(arr, arr2);
+        }
+    }
+
+    public void EnableQuestInfoWindow(int questNum)
+    {
+        questInfoView.EnableQuestInfoWindow();
+        questInfoView.SetQuest(QuestSystem.instance.GetQuest(questNum));
     }
 }
